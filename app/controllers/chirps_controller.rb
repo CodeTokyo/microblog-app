@@ -1,4 +1,6 @@
 class ChirpsController < ApplicationController
+  before_action :authenticate_user!, except: [:index, :show]
+
   def index
     @chirps = Chirp.all
   end
@@ -14,6 +16,7 @@ class ChirpsController < ApplicationController
   def create
     chirp = Chirp.new(content: params[:content])
     chirp.save
+    flash[:success] = "Chirp Successful"
     redirect_to "/chirps"
   end
   
@@ -24,6 +27,7 @@ class ChirpsController < ApplicationController
   def update
     chirp = Chirp.find(params[:id])
     chirp.update(content: params[:content])
+    flash[:success] = "Updated Chirp"
 
     redirect_to "/chirps/#{chirp.id}"
   end
@@ -31,7 +35,7 @@ class ChirpsController < ApplicationController
 def destroy
     chirp = Chirp.find(params[:id])
     chirp.destroy
-
+    flash[:success] = "This Chirp is dead"
     redirect_to "/chirps"
   end
 
