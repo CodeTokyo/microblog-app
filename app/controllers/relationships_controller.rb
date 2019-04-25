@@ -7,11 +7,23 @@ class RelationshipsController < ApplicationController
       )
 
     if relationship.save
-      followed_user_name = User.find(params[:followee_id]).first_name
-      flash[:success] = "You're now Following #{followed_user_name}"
-      redirect_to "/users/#{params[:followee_id]}"
+
+      respond_to do |format|
+        format.html do
+          followed_user_name = User.find(params[:followee_id]).first_name
+          flash[:success] = "You're now Following #{followed_user_name}"
+          redirect_to "/users/#{params[:followee_id]}"
+        end
+        format.json {render json: {status: 201}}
+      end
+
     else
-      flash[:error] = "Something went wrong"
+      respond_to do |format|
+        format.html do
+          flash[:error] = "Something went wrong"
+        end
+        format.json {render json: {status: 406}}
+      end
     end
   end
 end
